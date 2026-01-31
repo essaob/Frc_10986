@@ -20,8 +20,8 @@ public class RobotContainer {
 
     drive.setDefaultCommand(
         new RunCommand(() -> {
-          double forward = -deadband(driver.getLeftY());
-          double turn = deadband(driver.getLeftX()) * DriveConstants.kTurnScale;
+          double forward = -deadband(driver.getLeftY());                       // סטיק שמאלי למעלה/למטה
+          double turn    =  deadband(driver.getLeftX()) * DriveConstants.kTurnScale; // סטיק שמאלי ימינה/שמאלה (פנייה)
           drive.arcadeDrive(forward, turn);
         }, drive)
     );
@@ -30,6 +30,9 @@ public class RobotContainer {
   private void configureBindings() {
     // A = עצירה מיידית
     driver.a().onTrue(new RunCommand(drive::stopAll, drive));
+
+    // START = איפוס ג'יירו (מומלץ אחרי הדלקה ולפני נהיגה)
+    driver.start().onTrue(new RunCommand(drive::zeroGyro, drive));
   }
 
   private static double deadband(double v) {
