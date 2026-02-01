@@ -6,33 +6,37 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.SwerveTestDriveSubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
 
-  private final SwerveTestDriveSubsystem drive = new SwerveTestDriveSubsystem();
+  private final SwerveDriveSubsystem drive = new SwerveDriveSubsystem();
 
   private final CommandXboxController driver =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public RobotContainer() {
-    configureBindings();
 
     drive.setDefaultCommand(
-        new RunCommand(() -> {
-          double forward = -deadband(driver.getLeftY());                       // סטיק שמאלי למעלה/למטה
-          double turn    =  deadband(driver.getLeftX()) * DriveConstants.kTurnScale; // סטיק שמאלי ימינה/שמאלה (פנייה)
-          drive.arcadeDrive(forward, turn);
-        }, drive)
+      new RunCommand(() -> {
+        double x = -deadband(driver.getLeftY()); // קדימה/אחורה
+        double y = -deadband(driver.getLeftX()); // שמאל/ימין (הפכתי כדי שימינה זה + לפי נוחות; אם הפוך תגיד לי)
+
+        double xSpeed = x * DriveConstants.kMaxSpeedMps * DriveConstants.kDriverSpeedScale;
+        double ySpeed = y * DriveConstants.kMaxSpeedMps * DriveConstants.kDriverSpeedScale;
+
+        drive.driveFieldRelative(xSpeed, ySpeed);
+      }, drive)
     );
-  }
 
-  private void configureBindings() {
-    // A = עצירה מיידית
-    driver.a().onTrue(new RunCommand(drive::stopAll, drive));
-
-    // START = איפוס ג'יירו (מומלץ אחרי הדלקה ולפני נהיגה)
+    // START = איפוס ג'יירו
     driver.start().onTrue(new RunCommand(drive::zeroGyro, drive));
+
+    // BACK = סנכרון מודולות לאבסולוטי (אחרי יישור/או אם קפץ)
+    driver.back().onTrue(new RunCommand(drive::syncAllToAbsolute, drive));
+
+    // A = עצירה
+    driver.a().onTrue(new RunCommand(drive::stopAll, drive));
   }
 
   private static double deadband(double v) {
