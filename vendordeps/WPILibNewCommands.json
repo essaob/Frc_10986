@@ -25,7 +25,10 @@
       "sharedLibrary": true,
       "skipInvalidPlatforms": true,
       "binaryPlatforms": [
+<<<<<<< HEAD
         "linuxsystemcore",
+=======
+>>>>>>> 6e162ba (Frc_10986)
         "linuxathena",
         "linuxarm32",
         "linuxarm64",
@@ -36,4 +39,8 @@
       ]
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6e162ba (Frc_10986)
