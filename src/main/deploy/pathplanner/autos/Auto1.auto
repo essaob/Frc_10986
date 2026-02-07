@@ -9,6 +9,18 @@
           "data": {
             "pathName": "path_1"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
+          }
         }
       ]
     }
